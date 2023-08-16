@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import AuthRouter from "./controllers/auth.js";
+import UserRouter from "./controllers/users.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -19,10 +20,11 @@ mongoose
   });
 
 app.get("/", (req, res, next) => {
-  res.send("Hello World");
+  res.json({ message: "Hello World" });
 });
 
 app.use("/auth", AuthRouter);
+app.use("/users", UserRouter);
 
 app.all("*", (req, res, next) => {
   res.status(404).send("This route does not exist");

@@ -4,7 +4,9 @@ import jwt from "jsonwebtoken";
 import { verifyToken } from "../middlewares/verifyToken.js";
 const router = express.Router();
 router.get("/", (req, res, next) => {
-    res.send("Hello World");
+    res.json({
+        message: "Hello to auth",
+    });
 });
 router.post("/login", (req, res, next) => {
     const { email, password } = req.body;
@@ -18,7 +20,7 @@ router.post("/login", (req, res, next) => {
             user = user.toObject();
             delete user.password;
             const token = jwt.sign(user, process.env.JWT_SECRET);
-            res.send({ message: "Login successful", token });
+            res.json({ message: "Login successful", token });
         });
     })
         .catch(next);
@@ -27,7 +29,7 @@ router.post("/register", (req, res, next) => {
     const { userType, firstName, lastName, email, password } = req.body;
     User.create({ userType, firstName, lastName, email, password })
         .then((user) => {
-        res.send("Registration successful");
+        res.json({ message: "Registration successful" });
     })
         .catch(next);
 });
@@ -41,7 +43,7 @@ router.post("/forgot-password", (req, res, next) => {
         user.resetPasswordToken = Math.round(Math.random() * 1000000);
         user.resetPasswordExpires = new Date(Date.now() + 3600000);
         user.save();
-        res.send({
+        res.json({
             message: "Password reset email sent",
             resetPasswordToken: user.resetPasswordToken,
         });
@@ -62,7 +64,7 @@ router.post("/reset-password", (req, res, next) => {
         user.resetPasswordToken = null;
         user.resetPasswordExpires = null;
         user.save();
-        res.send("Password reset successful");
+        res.json({ message: "Password reset successful" });
     })
         .catch(next);
 });
@@ -78,7 +80,7 @@ router.post("/change-password", verifyToken, (req, res, next) => {
                 return res.status(400).send("Invalid credentials");
             user.password = newPassword;
             user.save();
-            res.send("Password changed successfully");
+            res.json({ message: "Password changed successfully" });
         });
     })
         .catch(next);
@@ -94,7 +96,7 @@ router.post("/update-profile", verifyToken, (req, res, next) => {
         user.lastName = lastName;
         user.profilePicture = profilePicture;
         user.save();
-        res.send("Profile updated successfully");
+        res.json({ message: "Profile updated successfully" });
     })
         .catch(next);
 });
@@ -106,7 +108,7 @@ router.get("/get-profile", verifyToken, (req, res, next) => {
             return res.status(404).send("User does not exist");
         user = user.toObject();
         delete user.password;
-        res.send(user);
+        res.json(user);
     })
         .catch(next);
 });
