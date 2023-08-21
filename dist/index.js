@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import AuthRouter from "./controllers/auth.js";
 import UserRouter from "./controllers/users.js";
+import VehicleRouter from "./controllers/vehicles.js";
 import dotenv from "dotenv";
 dotenv.config();
 const PORT = 3000;
@@ -20,6 +21,7 @@ app.get("/", (req, res, next) => {
 });
 app.use("/auth", AuthRouter);
 app.use("/users", UserRouter);
+app.use("/vehicles", VehicleRouter);
 app.all("*", (req, res, next) => {
     res.status(404).send("This route does not exist");
 });
