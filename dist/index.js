@@ -4,10 +4,14 @@ import AuthRouter from "./controllers/auth.js";
 import UserRouter from "./controllers/users.js";
 import VehicleRouter from "./controllers/vehicles.js";
 import dotenv from "dotenv";
+import morgan from "morgan";
+import cors from "cors";
 dotenv.config();
 const PORT = 3000;
 const app = express();
 app.use(express.json());
+app.use(morgan("dev"));
+app.use(cors());
 mongoose
     .connect(process.env.MONGO_DB_URL)
     .then(() => {
